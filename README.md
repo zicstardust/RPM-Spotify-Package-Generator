@@ -19,9 +19,9 @@ Designed for simplicity and reliability, this generator helps users maintain up-
 | [`fedora-previous`](https://github.com/zicstardust/RPM-Spotify-Package-Generator/blob/main/dockerfile-fedora-previous) | amd64 | Create a Spotify package for the previous stable version of Fedora (42) |
 | [`fedora-beta`](https://github.com/zicstardust/RPM-Spotify-Package-Generator/blob/main/dockerfile-fedora-beta) | amd64 | Create a Spotify package for Fedora Beta. (44) |
 | [`rawhide`](https://github.com/zicstardust/RPM-Spotify-Package-Generator/blob/main/dockerfile-fedora-rawhide) | amd64 | Create a Spotify package for Fedora Rawhide. (44) |
-| [`el8`](https://github.com/zicstardust/RPM-Spotify-Package-Generator/blob/main/dockerfile-fedora-el8) | amd64 | Create a Spotify package for RHEL 8 derivatives |
-| [`el9`](https://github.com/zicstardust/RPM-Spotify-Package-Generator/blob/main/dockerfile-fedora-el9) | amd64 | Create a Spotify package for RHEL 9 derivatives |
-| [`el10`](https://github.com/zicstardust/RPM-Spotify-Package-Generator/blob/main/dockerfile-fedora-el10) | amd64 | Create a Spotify package for RHEL 10 derivatives |
+| [`el8`](https://github.com/zicstardust/RPM-Spotify-Package-Generator/blob/main/dockerfile-el8) | amd64 | Create a Spotify package for RHEL 8 derivatives |
+| [`el9`](https://github.com/zicstardust/RPM-Spotify-Package-Generator/blob/main/dockerfile-el9) | amd64 | Create a Spotify package for RHEL 9 derivatives |
+| [`el10`](https://github.com/zicstardust/RPM-Spotify-Package-Generator/blob/main/dockerfile-el10) | amd64 | Create a Spotify package for RHEL 10 derivatives |
 
 ## Usage
 ### docker-compose
