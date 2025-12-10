@@ -3,9 +3,17 @@ name: Push images to docker hub
 on:
   push:
     branches: [ "main" ]
+    paths:
+      - scripts/**
+      - dockerfile**
+      - entrypoint.sh
 
   pull_request:
     branches: [ "main" ]
+    paths:
+      - scripts/**
+      - dockerfile**
+      - entrypoint.sh
 
 env:
   PLATAFORM_ARCH: linux/amd64
