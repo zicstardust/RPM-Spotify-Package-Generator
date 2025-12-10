@@ -41,7 +41,7 @@ jobs:
           platforms: ${{ env.PLATAFORM_ARCH }}
                 
       -
-        name: Build and push - fc${{ vars.FEDORA_CURRENT }}
+        name: Build and push - fc${{ env.FEDORA_CURRENT }}
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -49,28 +49,28 @@ jobs:
           platforms: ${{ env.PLATAFORM_ARCH }}
           push: true
           tags: |
-            ${{ env.CONTAINER_REPO }}:fc${{ vars.FEDORA_CURRENT }}
+            ${{ env.CONTAINER_REPO }}:fc${{ env.FEDORA_CURRENT }}
             ${{ env.CONTAINER_REPO }}:latest
 
       -
-        name: Build and push - fc${{ vars.FEDORA_PREVIOUS }}
+        name: Build and push - fc${{ env.FEDORA_PREVIOUS }}
         uses: docker/build-push-action@v6
         with:
           context: .
           file: dockerfile-fedora-previous
           platforms: ${{ env.PLATAFORM_ARCH }}
           push: true
-          tags: ${{ env.CONTAINER_REPO }}:fc${{ vars.FEDORA_PREVIOUS }}
+          tags: ${{ env.CONTAINER_REPO }}:fc${{ env.FEDORA_PREVIOUS }}
 
       -
-        name: Build and push - fc${{ vars.FEDORA_BETA }}
+        name: Build and push - fc${{ env.FEDORA_BETA }}
         uses: docker/build-push-action@v6
         with:
           context: .
           file: dockerfile-fedora-beta
           platforms: ${{ env.PLATAFORM_ARCH }}
           push: true
-          tags: ${{ env.CONTAINER_REPO }}:fc${{ vars.FEDORA_BETA }}
+          tags: ${{ env.CONTAINER_REPO }}:fc${{ env.FEDORA_BETA }}
 
       -
         name: Build and push - rawhide
