@@ -1,0 +1,16 @@
+services:
+  spotify-rpm:
+    container_name: spotify-rpm
+    image: spotify-rpm
+    build:
+      #dockerfile: dockerfile-el8
+      #dockerfile: dockerfile-el9
+      #dockerfile: dockerfile-el10
+      #dockerfile: dockerfile-fedora-previous
+      dockerfile: dockerfile
+      #dockerfile: dockerfile-fedora-beta
+      #dockerfile: dockerfile-fedora-rawhide
+    environment:
+      - INTERVAL=1d
+    volumes:
+      - ./data:/data

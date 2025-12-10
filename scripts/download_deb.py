@@ -31,14 +31,15 @@ def parse_deb_control_file(path):
 
 
 def download_deb(url):
-    request.urlretrieve(f'https://repository.spotify.com/{url}', f'{url.replace('pool/non-free/s/spotify-client/', '/build/')}')
+    deb_output = url.replace('pool/non-free/s/spotify-client/', '/build/')
+    request.urlretrieve(f'https://repository.spotify.com/{url}', deb_output)
 
 
 if __name__ == "__main__":
     file = download_deb_control_file('spotify.info')
     result = parse_deb_control_file(file)
+    spotify_version = result['Version'].replace('1:', '')
 
+
+    print(f"Downloading .deb, latest version: {spotify_version}")
     download_deb(result['Filename'])
-
-    #print(result['Filename'])
-    #print(result['Version'])

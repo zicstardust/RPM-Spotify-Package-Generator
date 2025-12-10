@@ -13,6 +13,7 @@ BUILD_DIR = "/root/rpmbuild"
 
 
 # Create directory structure for rpmbuild
+print('Create directory structure for rpmbuild')
 os.mkdir(BUILD_DIR)
 os.mkdir(f'{BUILD_DIR}/BUILD')
 os.mkdir(f'{BUILD_DIR}/RPMS')
@@ -24,13 +25,9 @@ os.mkdir(f'{BUILD_DIR}/SRPMS')
 # Copy .deb to SOURCES
 shutil.copy(deb_file, f'{BUILD_DIR}/SOURCES')
 
-# Create temporary working directory
-#WORK_DIR = "/tmp/spotify-build"
-#os.mkdir(WORK_DIR)
-#os.chdir(WORK_DIR)
-
 # Extract .deb manually
-os.system(f'ar x {deb_file} --output /build')
+print('Extract .deb')
+os.system(f'ar x {deb_file}')
 os.system('tar xf /build/data.tar.gz')
 
 
@@ -154,6 +151,7 @@ for root, dirs, files in os.walk(base_path):
 
 
 # Generate spec file
+print('Create spec file')
 output_path = f"{BUILD_DIR}/SPECS/spotify.spec"
 content = f"""%global debug_package %{{nil}}
 %global __strip /bin/true
@@ -203,4 +201,5 @@ os.system(f"rm -Rf {INSTALL_DIR}/usr/share/spotify/apt-keys")
 
 
 # Build the RPM
+print('Building the RPM...')
 os.system(f"rpmbuild -bb --define \"_topdir {BUILD_DIR}\" {BUILD_DIR}/SPECS/spotify.spec 2>&1 | grep -E '(^Wrote:|^error:|^Error)' || true")

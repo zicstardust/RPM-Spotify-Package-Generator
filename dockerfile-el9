@@ -1,22 +1,18 @@
 FROM almalinux:9.7
 
+ENV PYTHONUNBUFFERED=1
 ENV INTERVAL=1d
 
 RUN dnf -y update && \
     dnf -y install \
-    #lsb_release \
     desktop-file-utils \
-    python3 \
+    python39 \
     make \
     rpm-build \
     rpmdevtools \
-    #wget \
-    #curl \
     binutils \
     gtk-update-icon-cache \
     && dnf clean all
-
-#RUN rpmdev-setuptree
 
 WORKDIR /build
 
