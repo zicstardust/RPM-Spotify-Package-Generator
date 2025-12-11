@@ -15,7 +15,7 @@ RUN dnf -y update && \
     gtk-update-icon-cache \
     util-linux \
     httpd \
-    createrepo \
+    createrepo_c \
     && dnf clean all \
     && rm -f /etc/httpd/conf.d/welcome.conf \
     && sed -i "s/User apache/User spotify/" /etc/httpd/conf/httpd.conf \
