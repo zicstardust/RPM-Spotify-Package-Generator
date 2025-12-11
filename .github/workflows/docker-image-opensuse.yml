@@ -1,0 +1,86 @@
+name: Push images to docker hub
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - scripts/**
+      - dockerfile-leap**
+      - dockerfile-tumbleweed
+      - entrypoint.sh
+
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - scripts/**
+      - dockerfile-leap**
+      - dockerfile-tumbleweed
+      - entrypoint.sh
+
+env:
+  PLATAFORM_ARCH: linux/amd64
+  CONTAINER_REPO: ${{ vars.DOCKERHUB_USERNAME }}/${{ vars.DOCKERHUB_REPOSITORY }}
+  LEAP_PREVIOUS: 15
+  LEAP_CURRENT: 16
+  
+jobs:
+  build:
+    
+    runs-on: ubuntu-latest
+
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v4
+      
+      -
+        name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      -
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+        
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          platforms: ${{ env.PLATAFORM_ARCH }}
+            
+      -
+        name: Build and push - openSUSE Leap ${{ env.LEAP_PREVIOUS }}
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: dockerfile-leap-previous
+          platforms: ${{ env.PLATAFORM_ARCH }}
+          push: true
+          tags: |
+              ${{ env.CONTAINER_REPO }}:leap${{ env.LEAP_PREVIOUS }}
+              ${{ env.CONTAINER_REPO }}:leap-previous
+
+
+      -
+        name: Build and push - openSUSE Leap ${{ env.LEAP_CURRENT }}
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: dockerfile-leap
+          platforms: ${{ env.PLATAFORM_ARCH }}
+          push: true
+          tags: |
+            ${{ env.CONTAINER_REPO }}:leap${{ env.LEAP_CURRENT }}
+            ${{ env.CONTAINER_REPO }}:leap
+
+
+      -
+        name: Build and push - openSUSE Tumbleweed
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: dockerfile-tumbleweed
+          platforms: ${{ env.PLATAFORM_ARCH }}
+          push: true
+          tags: ${{ env.CONTAINER_REPO }}:tumbleweed
