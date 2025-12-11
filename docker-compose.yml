@@ -12,7 +12,7 @@ services:
       #dockerfile: dockerfile-fc-rawhide
     environment:
       - INTERVAL=5m
-      - ENABLE_SERVER_REPO=1
+      - DISABLE_WEB_SERVER=0
     ports:
       - 80:80
     volumes:

@@ -2,7 +2,7 @@ FROM fedora:43
 
 ENV PYTHONUNBUFFERED=1
 ENV INTERVAL=1d
-ENV ENABLE_SERVER_REPO=0
+ENV DISABLE_WEB_SERVER=0
 
 RUN dnf -y update && \
     dnf -y install \

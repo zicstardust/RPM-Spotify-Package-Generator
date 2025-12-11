@@ -33,9 +33,8 @@ services:
     image: zicstardust/rpm-spotify-package-generator:latest
     environment:
       TZ: America/New_York
-      #INTERVAL: 1d
-    #ports: #only if ENABLE_SERVER_REPO is enable
-    #  - 80:80
+    ports:
+      - 80:80
     volumes:
       - <path to RPMs output>:/data
 ```
@@ -48,12 +47,14 @@ services:
 | `PUID` | Set UID | 1000 |
 | `PGID` | Set GID | 1000 |
 | `INTERVAL` | Set the interval to check for updates and generate the next RPM. | `1d` |
-| `ENABLE_SERVER_REPO` | Set `1` to enable web server repository | `0` |
+| `DISABLE_WEB_SERVER` | Set `1` to disable web server repository | `0` |
 
 
 ## Repository Web Server
 
-### exemple .repo file on client
+## On client
+
+Exemple `/etc/yum.repos.d/spotify.repo` file
 ```
 [spotify]
 name=Spotify - $releasever
@@ -62,6 +63,53 @@ enabled=1
 gpgcheck=0
 #gpgkey=http://127.0.0.1/gpg
 ```
+Install:
+```
+sudo dnf install spotify-client
+```
+
+## Multiple release repository
+Example of a single web server for FC 42, 43, 44 and EL 9.
+```
+services:
+  fc42:
+    container_name: spotify-fc42-releases
+    image: zicstardust/rpm-spotify-package-generator:fc42
+    environment:
+      TZ: America/New_York
+    ports:
+      - 80:80
+    volumes:
+      - <path to RPMs output>:/data
+  fc43:
+    container_name: spotify-fc43-releases
+    image: zicstardust/rpm-spotify-package-generator:fc43
+    environment:
+      TZ: America/New_York
+      DISABLE_WEB_SERVER: 1
+    volumes:
+      - <same path to RPMs output>:/data
+  fc44:
+    container_name: spotify-fc44-releases
+    image: zicstardust/rpm-spotify-package-generator:fc44
+    environment:
+      TZ: America/New_York
+      DISABLE_WEB_SERVER: 1
+    volumes:
+      - <same path to RPMs output>:/data
+  el9:
+    container_name: spotify-el9-releases
+    image: zicstardust/rpm-spotify-package-generator:el9
+    environment:
+      TZ: America/New_York
+      DISABLE_WEB_SERVER: 1
+    volumes:
+      - <same path to RPMs output>:/data
+```
+
+
+
+
 
 
 ## License

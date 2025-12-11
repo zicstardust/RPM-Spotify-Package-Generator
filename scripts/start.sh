@@ -6,14 +6,9 @@ do
 
 
     #copy RPM
-
-    if [ "$ENABLE_SERVER_REPO" == "1" ]; then
-        echo "copy RPM to repositoty"
-        python3 /build/copy_rpm_to_repo.py
-    else
-        echo "copy RPM to /data"
-        cp -Rf /home/spotify/rpmbuild/RPMS/x86_64/* /data/
-    fi
+    echo "copy RPM to /data"
+    python3 /build/copy_rpm_to_repo.py
+    
 
     #cleanup
     echo "cleanup..."
@@ -26,9 +21,8 @@ do
 
     rm -Rf /home/spotify/rpmbuild
 
-    if [ "$ENABLE_SERVER_REPO" == "1" ]; then
+    if [ "$DISABLE_WEB_SERVER" != "1" ]; then
         echo "update metadata repository..."
-        rm -Rf /data/spotify-client-*.rpm
         for i in $(ls /data); do
             createrepo /data/$i/x86_64/stable
         done
