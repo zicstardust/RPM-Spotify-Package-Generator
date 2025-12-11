@@ -156,7 +156,7 @@ output_path = f"{BUILD_DIR}/SPECS/spotify.spec"
 content = f"""%global debug_package %{{nil}}
 %global __strip /bin/true
 
-Name:           spotify
+Name:           spotify-client
 Version:        {spotify_version}
 Release:        1%{{?dist}}
 Summary:        Spotify desktop client
@@ -167,7 +167,7 @@ Requires:       libatomic
 Requires:       libayatana-appindicator-gtk3
 
 %description
-Spotify is a digital music service that gives you access to millions of songs.
+Spotify streaming music client.
 
 %install
 mkdir -p %{{buildroot}}
@@ -195,7 +195,7 @@ with open(output_path, "w", encoding="utf-8") as f:
 
 
 #Delete trash files
-#os.system(f"rm -Rf {INSTALL_DIR}/usr/share/spotify/icons")
+os.system(f"rm -Rf {INSTALL_DIR}/usr/share/spotify/icons")
 os.system(f"rm -f {INSTALL_DIR}/usr/share/spotify/spotify.desktop")
 os.system(f"rm -Rf {INSTALL_DIR}/usr/share/spotify/apt-keys")
 
