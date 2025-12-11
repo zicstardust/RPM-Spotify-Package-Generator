@@ -1,4 +1,4 @@
-name: Push images to docker hub
+name: Push images OpenSUSE to docker hub
 
 on:
   push:
