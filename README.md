@@ -5,9 +5,9 @@ A lightweight tool that automates the creation of RPM packages for Spotify. It d
 Designed for simplicity and reliability, this generator helps users maintain up-to-date Spotify installations without relying on unofficial or outdated repositories.
 
 
-[GitHub](https://github.com/zicstardust/rpm-spotify-package-generator)
+[GitHub](https://github.com/zicstardust/spotify-rpm-packager)
 
-[Docker Hub](https://hub.docker.com/r/zicstardust/RPM-Spotify-Package-Generator)
+[Docker Hub](https://hub.docker.com/r/zicstardust/spotify-rpm-packager)
 
 
 
@@ -15,13 +15,13 @@ Designed for simplicity and reliability, this generator helps users maintain up-
 
 | Tag | Architecture | Description |
 | :----: | :----: |--- |
-| [`latest`, `fc43`](https://github.com/zicstardust/RPM-Spotify-Package-Generator/blob/main/dockerfile) | amd64 | Create a Spotify package for the latest stable version of Fedora. |
-| [`fc-previous`, `fc42`](https://github.com/zicstardust/RPM-Spotify-Package-Generator/blob/main/dockerfile-fc-previous) | amd64 | Create a Spotify package for the previous stable version of Fedora. |
-| [`fc-beta`,`fc44`](https://github.com/zicstardust/RPM-Spotify-Package-Generator/blob/main/dockerfile-fc-beta) | amd64 | Create a Spotify package for Fedora Beta. |
-| [`rawhide`](https://github.com/zicstardust/RPM-Spotify-Package-Generator/blob/main/dockerfile-fc-rawhide) | amd64 | Create a Spotify package for Fedora Rawhide. |
-| [`el8`](https://github.com/zicstardust/RPM-Spotify-Package-Generator/blob/main/dockerfile-el8) | amd64 | Create a Spotify package for RHEL 8 derivatives |
-| [`el9`](https://github.com/zicstardust/RPM-Spotify-Package-Generator/blob/main/dockerfile-el9) | amd64 | Create a Spotify package for RHEL 9 derivatives |
-| [`el`, `el10`](https://github.com/zicstardust/RPM-Spotify-Package-Generator/blob/main/dockerfile-el10) | amd64 | Create a Spotify package for RHEL 10 derivatives |
+| [`latest`, `fc43`](https://github.com/zicstardust/spotify-rpm-packager/blob/main/dockerfile) | amd64 | Create a Spotify package for the latest stable version of Fedora. |
+| [`fc-previous`, `fc42`](https://github.com/zicstardust/spotify-rpm-packager/blob/main/dockerfile-fc-previous) | amd64 | Create a Spotify package for the previous stable version of Fedora. |
+| [`fc-beta`,`fc44`](https://github.com/zicstardust/spotify-rpm-packager/blob/main/dockerfile-fc-beta) | amd64 | Create a Spotify package for Fedora Beta. |
+| [`rawhide`](https://github.com/zicstardust/spotify-rpm-packager/blob/main/dockerfile-fc-rawhide) | amd64 | Create a Spotify package for Fedora Rawhide. |
+| [`el8`](https://github.com/zicstardust/spotify-rpm-packager/blob/main/dockerfile-el8) | amd64 | Create a Spotify package for RHEL 8 derivatives |
+| [`el9`](https://github.com/zicstardust/spotify-rpm-packager/blob/main/dockerfile-el9) | amd64 | Create a Spotify package for RHEL 9 derivatives |
+| [`el`, `el10`](https://github.com/zicstardust/spotify-rpm-packager/blob/main/dockerfile-el10) | amd64 | Create a Spotify package for RHEL 10 derivatives |
 
 
 ## Usage
@@ -29,8 +29,8 @@ Designed for simplicity and reliability, this generator helps users maintain up-
 ```
 services:
   spotify-rpm:
-    container_name: rpm-spotify-package-generator
-    image: zicstardust/rpm-spotify-package-generator:latest
+    container_name: spotify-rpm-packager
+    image: zicstardust/spotify-rpm-packager:latest
     environment:
       TZ: America/New_York
     ports:
@@ -96,7 +96,7 @@ Example of a single web server for FC 42, 43, 44 and EL 9.
 services:
   fc42:
     container_name: spotify-fc42-releases
-    image: zicstardust/rpm-spotify-package-generator:fc42
+    image: zicstardust/spotify-rpm-packager:fc42
     environment:
       TZ: America/New_York
       GPG_NAME: Exemple
@@ -108,7 +108,7 @@ services:
       - <path to GPG key>:/gpg-key
   fc43:
     container_name: spotify-fc43-releases
-    image: zicstardust/rpm-spotify-package-generator:fc43
+    image: zicstardust/spotify-rpm-packager:fc43
     environment:
       TZ: America/New_York
       DISABLE_WEB_SERVER: 1
@@ -116,7 +116,7 @@ services:
       - <same path to RPMs output>:/data
   fc44:
     container_name: spotify-fc44-releases
-    image: zicstardust/rpm-spotify-package-generator:fc44
+    image: zicstardust/spotify-rpm-packager:fc44
     environment:
       TZ: America/New_York
       DISABLE_WEB_SERVER: 1
@@ -124,7 +124,7 @@ services:
       - <same path to RPMs output>:/data
   el9:
     container_name: spotify-el9-releases
-    image: zicstardust/rpm-spotify-package-generator:el9
+    image: zicstardust/spotify-rpm-packager:el9
     environment:
       TZ: America/New_York
       DISABLE_WEB_SERVER: 1
