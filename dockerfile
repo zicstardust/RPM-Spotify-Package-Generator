@@ -2,6 +2,7 @@ FROM fedora:43
 
 ENV PYTHONUNBUFFERED=1
 ENV INTERVAL=1d
+ENV ENABLE_SERVER_REPO=0
 
 RUN dnf -y update && \
     dnf -y install \
@@ -13,7 +14,13 @@ RUN dnf -y update && \
     binutils \
     gtk-update-icon-cache \
     util-linux \
-    && dnf clean all
+    httpd \
+    createrepo \
+    && dnf clean all \
+    && rm -f /etc/httpd/conf.d/welcome.conf \
+    && sed -i "s/User apache/User spotify/" /etc/httpd/conf/httpd.conf \
+    && sed -i "s/Group apache/Group spotify/" /etc/httpd/conf/httpd.conf \
+    && sed -i 's|/var/www/html|/data|' /etc/httpd/conf/httpd.conf
 
 WORKDIR /build
 

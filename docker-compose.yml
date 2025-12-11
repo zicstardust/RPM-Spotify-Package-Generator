@@ -10,10 +10,11 @@ services:
       #dockerfile: dockerfile
       #dockerfile: dockerfile-fc-beta
       #dockerfile: dockerfile-fc-rawhide
-      #dockerfile: dockerfile-leap-previous
-      #dockerfile: dockerfile-leap
-      #dockerfile: dockerfile-tumbleweed
     environment:
-      - INTERVAL=1d
+      - INTERVAL=5m
+      - ENABLE_SERVER_REPO=1
+    ports:
+      - 80:80
     volumes:
       - ./data:/data
+      - ./repo:/var/www/html 

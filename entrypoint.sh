@@ -1,5 +1,4 @@
 #!/bin/bash
-
 set -e
 
 : "${PUID:=1000}"
@@ -16,5 +15,9 @@ fi
 mkdir -p /data /home/spotify
 
 chown -R spotify:spotify /build /data /home/spotify
+
+if [ "$ENABLE_SERVER_REPO" == "1" ]; then
+    httpd 1> /dev/null
+fi
 
 exec runuser -u spotify -- "$@"

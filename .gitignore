@@ -4,3 +4,4 @@ __pycache__
 rpmbuild
 data/
 *.rpm
+repo/

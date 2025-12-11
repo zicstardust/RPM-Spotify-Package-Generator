@@ -34,6 +34,8 @@ services:
     environment:
       TZ: America/New_York
       #INTERVAL: 1d
+    #ports: #only if ENABLE_SERVER_REPO is enable
+    #  - 80:80
     volumes:
       - <path to RPMs output>:/data
 ```
@@ -46,6 +48,7 @@ services:
 | `PUID` | Set UID | 1000 |
 | `PGID` | Set GID | 1000 |
 | `INTERVAL` | Set the interval to check for updates and generate the next RPM. | `1d` |
+| `ENABLE_SERVER_REPO` | Set `1` to enable web server repository | `0` |
 
 
 ## License
