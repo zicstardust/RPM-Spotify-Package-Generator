@@ -142,7 +142,9 @@ jobs:
             -e BUILTIN_FFMPEG=true \
             -e DISABLE_WEB_SERVER=true \
             -e STABLE_BUILDS=true \
+            -e TESTING_BUILDS=false \
             -e SRPMS_BUILDS=true \
+            -e LOG_LEVEL=all \
             -e INTERVAL=false \
             -v "$PWD/build-stable:/data" \
             spotify-rpm-packager:${GITHUB_RUN_ID}
@@ -201,6 +203,7 @@ jobs:
             -e SRPMS_BUILDS=true \
             -e STABLE_BUILDS=false \
             -e TESTING_BUILDS=true \
+            -e LOG_LEVEL=all \
             -e DISABLE_WEB_SERVER=true \
             -e INTERVAL=false \
             -v "$PWD/build-testing:/data" \
