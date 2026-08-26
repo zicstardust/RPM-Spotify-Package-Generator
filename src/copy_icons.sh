@@ -14,4 +14,4 @@ for i in 8 16 22 24 32 36 44 48 64 72 96 128 144 150 192 256 310 512 1024; do
 done
 
 mkdir -pv ${destine_dir}/hicolor/scalable/apps
-cp -arv /usr/local/bin/spotify-client.svg ${destine_dir}/hicolor/scalable/apps/
+cp -arv /home/spotify/spotify-client.svg ${destine_dir}/hicolor/scalable/apps/

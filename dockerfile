@@ -1,8 +1,8 @@
 FROM almalinux:10.2-minimal
 
 
-COPY src/* /usr/local/bin/
-
+COPY src/*.sh /usr/local/bin/
+COPY src/*.py /usr/local/bin/
 COPY entrypoint.sh /entrypoint.sh
 
 RUN chmod -R +x /usr/local/bin/*.sh /usr/local/bin/*.py /entrypoint.sh; \
@@ -33,11 +33,12 @@ RUN chmod -R +x /usr/local/bin/*.sh /usr/local/bin/*.py /entrypoint.sh; \
     \
     groupadd -g 1000 spotify; \
     useradd -m -u 1000 -g 1000 -s /sbin/nologin spotify; \
-    usermod -a -G mock spotify;
+    usermod -a -G mock spotify; \
+    mkdir -p /home/spotify/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS};
 
+COPY src/spotify-client.svg /home/spotify/
 COPY nginx/nginx.conf /etc/nginx/nginx.conf
-COPY nginx/block_default_server.conf /etc/nginx/conf.d/block_default_server.conf
-COPY nginx/repo_server.conf /etc/nginx/conf.d/repo_server.conf
+COPY nginx/*_server.conf /etc/nginx/conf.d/
 
 
 VOLUME [ "/data" ]

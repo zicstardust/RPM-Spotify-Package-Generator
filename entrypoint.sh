@@ -17,7 +17,6 @@ fi
 
 
 mkdir -p /data /gpg-key /logs
-mkdir -p /home/spotify/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
 chown -R spotify:spotify /data /home/spotify /gpg-key /logs
 
 
