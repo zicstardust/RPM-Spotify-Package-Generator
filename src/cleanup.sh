@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-logfile="$(getdate "log").cleanup.${SPOTIFY_VERSION}"
+logfile="$(getdate "log").${MAIN_LOG_NAME}"
 
 echo "$(getdate) - cleanup..." 2>&1 | logs $logfile "all"
 

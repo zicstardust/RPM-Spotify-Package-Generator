@@ -17,7 +17,7 @@ if [ ${#list_RPMs[@]} -gt $KEEP_VERSIONS ]; then
     i=0
     for file in "${list_RPMs[@]}"; do
         rm -f ${package_dir}/${file}
-        echo "$(getdate) - Deleted old RPM: $file" 2>&1 | logs $logfile "all"
+        echo "$(getdate) - Deleted old RPM: $file" 2>&1 | logs "$(getdate "log").${MAIN_LOG_NAME}" "all"
         i=$(($i+1))
         if [ $i -eq $delete_files_length ]; then
             break

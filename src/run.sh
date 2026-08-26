@@ -10,8 +10,6 @@ set -e
 : "${LOG_LEVEL:=info}"
 : "${ENTERPRISE_LINUX_BACKEND:=alma}"
 
-
-
 export STABLE_BUILDS
 export TESTING_BUILDS
 export SRPMS_BUILDS
@@ -22,6 +20,7 @@ export ENTERPRISE_LINUX_BACKEND
 
 export BUILD_DIR="/home/spotify/rpmbuild"
 export SOURCES_DIR="${BUILD_DIR}/SOURCES"
+export MAIN_LOG_NAME="spotify-rpm-packager"
 
 getdate(){
     local dateformat=$1
@@ -93,11 +92,11 @@ build_RPM(){
     check_builds=$(check_if_all_builds_exist $distros $SPOTIFY_BRANCH $SPOTIFY_VERSION) 
 
     if [ "$check_builds" = "true" ]; then
-        echo "$(getdate) - Not Found new .deb ${SPOTIFY_BRANCH} version, skip"
+        echo "$(getdate) - Not Found new .deb ${SPOTIFY_BRANCH} version, skip" | logs "$(getdate "log").${MAIN_LOG_NAME}" "all"
         return
     fi
     
-    echo "$(getdate) - New .deb ${SPOTIFY_BRANCH} version found!"
+    echo "$(getdate) - New .deb ${SPOTIFY_BRANCH} version found!" | logs "$(getdate "log").${MAIN_LOG_NAME}" "all"
     download_deb.sh $SPOTIFY_BRANCH $SPOTIFY_VERSION
     build_SRPM.sh $SPOTIFY_BRANCH $SPOTIFY_VERSION    
 
@@ -113,8 +112,8 @@ build_RPM(){
 if [ "$GPG_NAME" ] && [ "$GPG_EMAIL" ]; then
     export GPG_TTY=$(tty)
 
-    gpg --import /gpg-key/private.pgp 2>&1 | logs "$(getdate "log").rpm.gpg.import.log" 
-    gpg --import /gpg-key/public.pgp 2>&1 | logs "$(getdate "log").rpm.gpg.import.log" 
+    gpg --import /gpg-key/private.pgp 2>&1 | logs "$(getdate "log").${MAIN_LOG_NAME}" 
+    gpg --import /gpg-key/public.pgp 2>&1 | logs "$(getdate "log").${MAIN_LOG_NAME}" 
 
     gpg --export -a "${GPG_EMAIL}" > /data/gpg
 
@@ -123,7 +122,7 @@ fi
 
 #.Repo File
 if [ "$REPO_FILE_URL" ]; then
-    echo "$(getdate) - Generating repo file..." | logs "$(getdate "log").generate.repofile.log" "all"
+    echo "$(getdate) - Generating repo file..." | logs "$(getdate "log").${MAIN_LOG_NAME}" "all"
     generate_repofile.sh
 fi
 
@@ -133,21 +132,21 @@ do
     if [[ "$STABLE_BUILDS" =~ ^(1|true|True|y|Y)$ ]]; then
         build_RPM stable
     else
-        echo "$(getdate) - Skip build stable RPM"
+        echo "$(getdate) - Skip build stable RPM" | logs "$(getdate "log").${MAIN_LOG_NAME}" "all"
     fi
 
     if [[ "$TESTING_BUILDS" =~ ^(1|true|True|y|Y)$ ]]; then
         build_RPM testing
     else
-        echo "$(getdate) - Skip build testing RPM"
+        echo "$(getdate) - Skip build testing RPM" | logs "$(getdate "log").${MAIN_LOG_NAME}" "all"
     fi
 
     #Start interval
     if [[ "$INTERVAL" =~ ^(false|False|n|N)$ ]]; then
-        echo "$(getdate) - Interval disable, exit"
+        echo "$(getdate) - Interval disable, exit" | logs "$(getdate "log").${MAIN_LOG_NAME}" "all"
         exit 0
     else
-        echo "$(getdate) - Start INTERVAL: ${INTERVAL}"
+        echo "$(getdate) - Start INTERVAL: ${INTERVAL}" | logs "$(getdate "log").${MAIN_LOG_NAME}" "all"
         sleep ${INTERVAL}
     fi
 done

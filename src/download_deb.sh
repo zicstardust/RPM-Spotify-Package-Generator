@@ -3,7 +3,7 @@
 SPOTIFY_BRANCH=$1
 SPOTIFY_VERSION=$2
 
-logfile="$(getdate "log").download.deb.${SPOTIFY_VERSION}"
+logfile="$(getdate "log").${MAIN_LOG_NAME}"
 
 deb_file="/tmp/spotify-client_${SPOTIFY_VERSION}_amd64.deb"
 

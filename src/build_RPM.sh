@@ -5,8 +5,8 @@ SPOTIFY_VERSION=$2
 SPOTIFY_BRANCH=$3
 item=$4
 
-logfile="$(getdate "log").build.${item}"
-logfile_createrepo="$(getdate "log").createrepo.${item}"
+logfile="$(getdate "log").build.${item}.${SPOTIFY_VERSION}"
+logfile_createrepo="$(getdate "log").${MAIN_LOG_NAME}"
 
 distro="${item:0:2}"
 release="${item:2}"
