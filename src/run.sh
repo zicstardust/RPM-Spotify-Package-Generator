@@ -54,22 +54,7 @@ export -f getdate
 export -f logs
 
 
-#GPG Key
-if [ "$GPG_NAME" ] && [ "$GPG_EMAIL" ]; then
-    export GPG_TTY=$(tty)
 
-    gpg --import /gpg-key/private.pgp 2>&1 | logs "$(getdate "log").rpm.gpg.import.log" 
-    gpg --import /gpg-key/public.pgp 2>&1 | logs "$(getdate "log").rpm.gpg.import.log" 
-
-    gpg --export -a "${GPG_EMAIL}" > /data/gpg
-
-    set_rpmmacros.sh
-fi
-
-if [ "$REPO_FILE_URL" ]; then
-    echo "$(getdate) - Generating repo file..." | logs "$(getdate "log").generate.repofile.log" "all"
-    generate_repofile.sh
-fi
 
 check_if_all_builds_exist(){
     local distros=$1
@@ -123,6 +108,24 @@ build_RPM(){
     cleanup.sh
 }
 
+
+#GPG Key
+if [ "$GPG_NAME" ] && [ "$GPG_EMAIL" ]; then
+    export GPG_TTY=$(tty)
+
+    gpg --import /gpg-key/private.pgp 2>&1 | logs "$(getdate "log").rpm.gpg.import.log" 
+    gpg --import /gpg-key/public.pgp 2>&1 | logs "$(getdate "log").rpm.gpg.import.log" 
+
+    gpg --export -a "${GPG_EMAIL}" > /data/gpg
+
+    set_rpmmacros.sh
+fi
+
+#.Repo File
+if [ "$REPO_FILE_URL" ]; then
+    echo "$(getdate) - Generating repo file..." | logs "$(getdate "log").generate.repofile.log" "all"
+    generate_repofile.sh
+fi
 
 
 while :
