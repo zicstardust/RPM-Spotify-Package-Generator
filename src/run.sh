@@ -9,6 +9,9 @@ set -e
 : "${BUILD:=el10}"
 : "${LOG_LEVEL:=info}"
 : "${ENTERPRISE_LINUX_BACKEND:=alma}"
+: "${SOURCE:=deb}"
+
+IFS="," read -ra distros <<< "$BUILD"
 
 export STABLE_BUILDS
 export TESTING_BUILDS
@@ -17,6 +20,7 @@ export BUILTIN_FFMPEG
 export BUILD
 export LOG_LEVEL
 export ENTERPRISE_LINUX_BACKEND
+export SOURCE
 
 export BUILD_DIR="/home/spotify/rpmbuild"
 export SOURCES_DIR="${BUILD_DIR}/SOURCES"
@@ -56,28 +60,34 @@ export -f logs
 
 
 check_if_all_builds_exist(){
-    local distros=$1
-    local SPOTIFY_BRANCH=$2
-    local SPOTIFY_VERSION=$3
-    
+    local SPOTIFY_BRANCH=$1
+    local SPOTIFY_VERSION=$2
+
     for item in "${distros[@]}"; do
+        echo "$(getdate) - Checking if exists .rpm to spotify ${SPOTIFY_VERSION} - ${item}..." | logs "$(getdate "log").${MAIN_LOG_NAME}"
+
 
         release="${item:2}"
 
-        if ! [ "$(ls /data/${release}/x86_64/${SPOTIFY_BRANCH}/Packages/spotify-client-${SPOTIFY_VERSION}*.x86_64.rpm 2> /dev/null)" ]; then
-            echo "false"
+        if [ ! -e "$(ls /data/${release}/x86_64/${SPOTIFY_BRANCH}/Packages/spotify-client-${SPOTIFY_VERSION}*.x86_64.rpm 2> /dev/null)" ]; then
+            echo "$(getdate) - Not found: data/${release}/x86_64/${SPOTIFY_BRANCH}/Packages/spotify-client-${SPOTIFY_VERSION}*.x86_64.rpm" | logs "$(getdate "log").${MAIN_LOG_NAME}"
+            echo "false" > /tmp/all_builds_exists
             return
+        else
+            echo "$(getdate) - Found: data/${release}/x86_64/${SPOTIFY_BRANCH}/Packages/spotify-client-${SPOTIFY_VERSION}*.x86_64.rpm" | logs "$(getdate "log").${MAIN_LOG_NAME}"
         fi
 
         if [[ "$SRPMS_BUILDS" =~ ^(1|true|True|y|Y)$ ]]; then
-            if ! [ "$(ls /data/${release}/source/${SPOTIFY_BRANCH}/Packages/spotify-client-${SPOTIFY_VERSION}*.src.rpm 2> /dev/null)" ]; then
-                echo "false"
+            if [ ! -e  "$(ls /data/${release}/source/${SPOTIFY_BRANCH}/Packages/spotify-client-${SPOTIFY_VERSION}*.src.rpm 2> /dev/null)" ]; then
+                echo "$(getdate) - Not found: data/${release}/source/${SPOTIFY_BRANCH}/Packages/spotify-client-${SPOTIFY_VERSION}*.x86_64.rpm" | logs "$(getdate "log").${MAIN_LOG_NAME}"
+                echo "false" > /tmp/all_builds_exists
                 return
+            else
+                echo "$(getdate) - Found: data/${release}/source/${SPOTIFY_BRANCH}/Packages/spotify-client-${SPOTIFY_VERSION}*.x86_64.rpm" | logs "$(getdate "log").${MAIN_LOG_NAME}"
             fi
         fi
     done
-    echo "true"
-    return
+    echo "true" > /tmp/all_builds_exists
 }
 
 
@@ -85,19 +95,29 @@ build_RPM(){
 
     local SPOTIFY_BRANCH=$1
 
-    parser_debian_control_file.py $SPOTIFY_BRANCH spotify-client Version
-    SPOTIFY_VERSION=$(cat /tmp/spotify-client.${SPOTIFY_BRANCH}.Version)
-    IFS="," read -ra distros <<< "$BUILD"
+    if [ "$SOURCE" = "deb" ]; then
+        parser_debian_control_file.py $SPOTIFY_BRANCH spotify-client Version
+    elif [ "$SOURCE" = "snap" ]; then
+        get_snap_version.sh $SPOTIFY_BRANCH
+    else
+        echo "$(getdate) - SOURCE \"${SOURCE}\" invalid" 2>&1 | logs $logfile "all"
+        exit 1
+    fi
 
-    check_builds=$(check_if_all_builds_exist $distros $SPOTIFY_BRANCH $SPOTIFY_VERSION) 
+    SPOTIFY_VERSION=$(cat /tmp/spotify-client.${SPOTIFY_BRANCH}.Version)
+
+    check_if_all_builds_exist $SPOTIFY_BRANCH $SPOTIFY_VERSION
+    check_builds=$(cat /tmp/all_builds_exists) 
 
     if [ "$check_builds" = "true" ]; then
-        echo "$(getdate) - Not Found new .deb ${SPOTIFY_BRANCH} version, skip" | logs "$(getdate "log").${MAIN_LOG_NAME}" "all"
+        echo "$(getdate) - Not Found new Spotify ${SPOTIFY_BRANCH} version, skip" | logs "$(getdate "log").${MAIN_LOG_NAME}" "all"
         return
     fi
     
-    echo "$(getdate) - New .deb ${SPOTIFY_BRANCH} version found!" | logs "$(getdate "log").${MAIN_LOG_NAME}" "all"
-    download_deb.sh $SPOTIFY_BRANCH $SPOTIFY_VERSION
+    echo "$(getdate) - New .${SOURCE} ${SPOTIFY_BRANCH} version found!" | logs "$(getdate "log").${MAIN_LOG_NAME}" "all"
+    echo "$(getdate) - Downloading .${SOURCE}, latest ${SPOTIFY_BRANCH} version: $SPOTIFY_VERSION" 2>&1 | logs $logfile "all"
+    download_spotify.sh $SPOTIFY_BRANCH $SPOTIFY_VERSION
+
     build_SRPM.sh $SPOTIFY_BRANCH $SPOTIFY_VERSION    
 
     for item in "${distros[@]}"; do

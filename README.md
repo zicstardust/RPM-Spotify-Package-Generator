@@ -1,6 +1,6 @@
 # Spotify RPM Packager
 
-A tool that automates the creation of RPM packages for Spotify. It downloads the latest Spotify release from debian repository, applies necessary adjustments for system compatibility, and bundles everything into a clean RPM package ready for installation on RPM-based Linux distributions such as Fedora and RHEL derivatives.
+A tool that automates the creation of RPM packages for Spotify. It downloads the latest Spotify release from debian repository or snapcraft, applies necessary adjustments for system compatibility, and bundles everything into a clean RPM package ready for installation on RPM-based Linux distributions such as Fedora and RHEL derivatives.
 
 This package includes enhancements and fixes compared to the official .DEB.
 

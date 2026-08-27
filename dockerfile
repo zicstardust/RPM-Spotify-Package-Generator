@@ -25,7 +25,9 @@ RUN chmod -R +x /usr/local/bin/*.sh /usr/local/bin/*.py /entrypoint.sh; \
         gpg \
         rpm-sign \
         httpd-tools \
-        mock; \
+        mock \
+        jq \
+        squashfs-tools; \
     microdnf clean all; \
     rm -rf /var/cache/dnf; \
     \

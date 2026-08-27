@@ -13,17 +13,24 @@ fi
 
 current_dir=$(pwd)
 cd /tmp
-deb_file="/tmp/spotify-client_${SPOTIFY_VERSION}_amd64.deb"
-
-# Extract .deb
-echo "$(getdate) - Extracting .deb..." 2>&1 | logs $logfile "all"
-ar x ${deb_file} 2>&1 | logs $logfile
-tar -xvf data.tar.gz 2>&1 | logs $logfile
+source_file="/tmp/spotify-client_${SPOTIFY_VERSION}_amd64.${SOURCE}"
 mkdir -v spotify-client-${SPOTIFY_VERSION} 2>&1 | logs $logfile
-mv -v usr spotify-client-${SPOTIFY_VERSION} 2>&1 | logs $logfile
+echo "$(getdate) - Extracting .${SOURCE}..." 2>&1 | logs $logfile "all"
+
+
+if [ "$SOURCE" = "deb" ]; then
+    # Extract .deb
+    ar x ${source_file} 2>&1 | logs $logfile
+    tar -xvf data.tar.gz 2>&1 | logs $logfile
+    mv -v usr spotify-client-${SPOTIFY_VERSION} 2>&1 | logs $logfile
+else
+    unsquashfs ${source_file} 2>&1 | logs $logfile
+    mv -v /tmp/squashfs-root/usr spotify-client-${SPOTIFY_VERSION} 2>&1 | logs $logfile
+fi
+
 
 #Delete apt-keys folder
-echo "$(getdate) - Remove from .deb: apt-keys" 2>&1 | logs $logfile "all"
+echo "$(getdate) - Remove from .${SOURCE}: apt-keys" 2>&1 | logs $logfile "all"
 rm -Rfv spotify-client-${SPOTIFY_VERSION}/usr/share/spotify/apt-keys 2>&1 | logs $logfile
 
 #Include FFMPEG libraries
@@ -39,13 +46,13 @@ fi
 # Generate Desktop Entry
 echo "$(getdate) - Add to SRPM: Desktop Entry" 2>&1 | logs $logfile "all"
 generate_desktopentry.sh spotify-client-${SPOTIFY_VERSION}/usr/share/applications ${SPOTIFY_VERSION}
-echo "$(getdate) - Remove from .deb: Desktop Entry" 2>&1 | logs $logfile "all"
+echo "$(getdate) - Remove from .${SOURCE}: Desktop Entry" 2>&1 | logs $logfile "all"
 rm -fv spotify-client-${SPOTIFY_VERSION}/usr/share/spotify/spotify.desktop 2>&1 | logs $logfile
 
 #Copy icons
 echo "$(getdate) - Add to SRPM: Icons" 2>&1 | logs $logfile "all"
 copy_icons.sh ${SPOTIFY_VERSION} 2>&1 | logs $logfile
-echo "$(getdate) - Remove from .deb: Icons" 2>&1 | logs $logfile "all"
+echo "$(getdate) - Remove from .${SOURCE}: Icons" 2>&1 | logs $logfile "all"
 rm -Rfv spotify-client-${SPOTIFY_VERSION}/usr/share/spotify/icons 2>&1 | logs $logfile
 
 # Generate man page
@@ -58,7 +65,7 @@ generate_appdata.sh spotify-client-${SPOTIFY_VERSION}/usr/share/appdata ${SPOTIF
 
 
 # Genarate bin
-echo "$(getdate) - Remove from .deb: Bin" 2>&1 | logs $logfile "all"
+echo "$(getdate) - Remove from .${SOURCE}: Bin" 2>&1 | logs $logfile "all"
 rm -fv spotify-client-${SPOTIFY_VERSION}/usr/bin/spotify 2>&1 | logs $logfile
 echo "$(getdate) - Add to SRPM: Bin" 2>&1 | logs $logfile "all"
 generate_bin.sh spotify-client-${SPOTIFY_VERSION}/usr/bin $BUILTIN_FFMPEG
