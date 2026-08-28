@@ -42,8 +42,11 @@ COPY src/spotify-client.svg /home/spotify/
 COPY nginx/nginx.conf /etc/nginx/nginx.conf
 COPY nginx/*_server.conf /etc/nginx/conf.d/
 
+EXPOSE 80/tcp
 
 VOLUME [ "/data" ]
+VOLUME [ "/gpg" ]
+VOLUME [ "/logs" ]
 
 ENTRYPOINT ["/entrypoint.sh"]
 
